@@ -12,6 +12,7 @@ namespace Wkhtmltopdf.NetCore
         public ConvertOptions()
         {
             this.PageMargins = new Margins();
+            this.AdditionalOptions = new Dictionary<string, string>();
         }
 
         /// <summary>
@@ -105,6 +106,12 @@ namespace Wkhtmltopdf.NetCore
         [OptionFlag("--replace")]
         public Dictionary<string, string> Replacements { get; set; }
 
+        /// <summary>
+        /// Sets additional options
+        /// </summary>
+        /// <remarks>Each option key is passed as-is</remarks>
+        public Dictionary<string, string> AdditionalOptions { get; set; }
+
         public string GetConvertOptions()
         {
             var result = new StringBuilder();
@@ -150,6 +157,12 @@ namespace Wkhtmltopdf.NetCore
                 {
                     result.AppendFormat(CultureInfo.InvariantCulture, " {0} {1}", of.Name, value);
                 }
+            }
+
+            foreach (var option in AdditionalOptions)
+            {
+                var key = option.Key;
+                result.AppendFormat(CultureInfo.InvariantCulture, " {0} {1}", option.Key, option.Value);
             }
 
             return result.ToString().Trim();
